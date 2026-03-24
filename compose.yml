@@ -1,0 +1,35 @@
+services:
+  nginx:
+    build: ./nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs/server.chain.crt:/etc/nginx/cert.pem:ro
+      - ./certs/server.key:/etc/nginx/key.pem:ro
+    depends_on:
+      - dwc
+
+  dwc:
+    build: ./dwc
+    restart: unless-stopped
+    ports:
+      # GameSpy TCP
+      - "27500:27500"
+      - "28910:28910"
+      - "29900:29900"
+      - "29901:29901"
+      - "29920:29920"
+      # GameSpy UDP
+      - "27900:27900/udp"
+      - "27901:27901/udp"
+      # Admin
+      - "127.0.0.1:9009:9009"
+    volumes:
+      - ./dwc/adminpageconf.json:/dwc/adminpageconf.json:ro
+      - dwc_data:/dwc/data
+
+volumes:
+  dwc_data:

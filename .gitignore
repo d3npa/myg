@@ -1,2 +1,2 @@
-!certs/gen.sh
 certs/*
+!certs/gen.sh
